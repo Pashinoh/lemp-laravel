@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  # === DATABASE: MySQL ===
+  db:
+    image: mysql:8.0
+    container_name: phpstack_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  # === WEB SERVER: PHP + Apache ===
+  web:
+    image: php:8.2-apache
+    container_name: phpstack_web
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - "8080:80"
+    command: bash -c "docker-php-ext-install mysqli pdo pdo_mysql && apache2-foreground"
+
+  # === PHPMYADMIN ===
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpstack_phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8081:80"
+
+volumes:
+  db_data:

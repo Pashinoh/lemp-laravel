@@ -1,0 +1,76 @@
+===========================================================
+          🐳 INSTALLATION GUIDE: PHP + MySQL + phpMyAdmin
+                   USING DOCKER COMPOSE
+===========================================================
+
+📘 DESCRIPTION
+This guide explains how to set up a complete PHP + Apache + MySQL + phpMyAdmin stack using Docker Compose.
+Suitable for beginners, developers, and server administrators.
+
+-----------------------------------------------------------
+⚙️ INSTALLATION STEPS
+-----------------------------------------------------------
+
+1. PREPARE DOCKER & DOCKER COMPOSE
+   - Make sure Docker and Docker Compose are installed on your system.
+   - Verify installation by running:
+
+         docker --version
+         docker compose version
+
+2. SET UP THE PROJECT FILES
+   - Create a new project folder, for example:
+
+         mkdir php-docker-stack && cd php-docker-stack
+
+   - Place the following files inside the folder:
+         • docker-compose.yml
+         • A folder named app/ with an index.php file inside
+
+3. RUN THE CONTAINERS
+   - Start the stack with:
+
+         docker compose up -d
+
+   - Wait until all containers are created and running.
+   - You should now have three containers:
+         • web          → PHP + Apache service
+         • db           → MySQL database service
+         • phpmyadmin   → phpMyAdmin web interface
+
+4. ACCESS VIA BROWSER
+   Once all containers are running, open your web browser and visit:
+
+         PHP Website   : http://localhost:8080
+         phpMyAdmin    : http://localhost:8081
+
+   (If running on a remote server, replace `localhost` with the server’s IP address.)
+
+5. LOGIN TO PHPMYADMIN
+   Use the following credentials:
+
+         Server   : db
+         Username : root
+         Password : root
+
+6. DONE ✅
+   Your PHP website and phpMyAdmin interface are now up and running.
+
+   MySQL data is stored persistently in:
+         ./mysql/data/
+
+-----------------------------------------------------------
+🧩 ADDITIONAL NOTES
+-----------------------------------------------------------
+
+- If ports 8080 or 8081 are already in use, change them in the `docker-compose.yml` file before starting.
+- The PHP application folder is located at:
+      ./app/
+- The MySQL database data folder is located at:
+      ./mysql/data/
+- All data is persistent — safe even if the containers are stopped or removed.
+- Docker images are compatible with both x86_64 and ARM architectures (including Raspberry Pi).
+- To stop the stack, use:
+
+      docker compose down
+
