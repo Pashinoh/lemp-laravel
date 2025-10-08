@@ -3,7 +3,7 @@ version: "3.8"
 services:
   # === DATABASE: MySQL ===
   db:
-    image: mysql:8.0
+    image: mysql:8.0-oracle
     container_name: phpstack_db
     restart: unless-stopped
     environment:
@@ -11,14 +11,17 @@ services:
       MYSQL_DATABASE: appdb
       MYSQL_USER: user
       MYSQL_PASSWORD: user123
+    command: --skip-innodb-doublewrite=ON --innodb-buffer-pool-size=128M --max_connections=30
     volumes:
       - ./mysql/data:/var/lib/mysql
     ports:
       - "3306:3306"
+    mem_limit: 512m
+    cpus: 0.5
 
   # === WEB SERVER: PHP + Apache ===
   web:
-    image: php:8.2-apache
+    image: php:8.2-apache-bullseye
     container_name: phpstack_web
     restart: unless-stopped
     depends_on:
@@ -28,10 +31,12 @@ services:
     ports:
       - "8080:80"
     command: bash -c "docker-php-ext-install mysqli pdo pdo_mysql && apache2-foreground"
+    mem_limit: 512m
+    cpus: 0.5
 
   # === PHPMYADMIN ===
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin:5.2.1-apache
     container_name: phpstack_phpmyadmin
     restart: unless-stopped
     depends_on:
@@ -40,9 +45,12 @@ services:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: root
-      UPLOAD_LIMIT: 100M
+      UPLOAD_LIMIT: 64M
+      MEMORY_LIMIT: 128M
     ports:
       - "8081:80"
+    mem_limit: 256m
+    cpus: 0.25
 
 volumes:
   db_data:
