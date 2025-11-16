@@ -1,68 +1,78 @@
 =====================================================
-LARAVEL STACK INSTALLATION GUIDE (DOCKER COMPOSE)
+LARAVEL DOCKER STACK — INSTALLATION GUIDE
 =====================================================
 
-This guide assumes you have placed all three required configuration files (docker-compose.yml, Dockerfile, default.conf) in the correct directories (src/, docker/php/, nginx/conf.d/).
+This guide explains how to deploy the Laravel LEMP stack using Docker Compose on Linux, CASA OS, or Windows.
 
 -----------------------------------------------------
-I. UNIVERSAL PREREQUISITES AND STRUCTURE
+I. REQUIRED SETUP & DIRECTORY STRUCTURE
 -----------------------------------------------------
 
 PREREQUISITES:
-- Docker Engine and Docker Compose (or Docker Desktop on Windows).
-- Git (Optional, but recommended for cloning the repository).
+- Docker Engine + Docker Compose (Linux & CASA OS)
+- Docker Desktop (Windows)
+- Git (optional)
 
-FILE STRUCTURE:
-- Ensure the project directory includes the following folders:
-  /src
-  /docker/php
-  /nginx/conf.d
+PROJECT STRUCTURE:
+Make sure your directory contains:
+  src/               ← Your Laravel project
+  docker/php/        ← Dockerfile
+  nginx/conf.d/      ← default.conf
+  docker-compose.yml ← main stack file
 
 -----------------------------------------------------
-II. DEPLOYMENT GUIDE FOR LINUX / CASAOS
+II. DEPLOYMENT ON LINUX / CASA OS
 -----------------------------------------------------
 
-1. NAVIGATION: Use SSH/Terminal to navigate to your project directory on the server (e.g., /DATA/AppData/your-project/).
+1. Navigate to your project directory:
+   Example (CASA OS):
+   cd /DATA/AppData/your-project/
 
-2. DEPLOYMENT COMMAND: Execute the command to build the custom PHP image and start all services:
+2. Start the stack and build the PHP image:
    docker compose up -d --build
 
-3. VERIFICATION: Ensure all containers are running:
+3. Verify the containers:
    docker ps
 
 -----------------------------------------------------
-III. DEPLOYMENT GUIDE FOR WINDOWS
+III. DEPLOYMENT ON WINDOWS
 -----------------------------------------------------
 
-1. PREREQUISITES: Ensure Docker Desktop is running.
+1. Make sure Docker Desktop is running.
 
-2. NAVIGATION: Open PowerShell or Command Prompt and navigate to your local project directory (e.g., C:\Users\user\project\).
+2. Open PowerShell and go to your project folder:
+   cd C:\Users\YourName\your-project\
 
-3. DEPLOYMENT COMMAND: Execute the same universal command:
+3. Run the stack:
    docker compose up -d --build
 
 -----------------------------------------------------
-IV. POST-DEPLOYMENT SETUP (REQUIRED FOR ALL HOSTS)
+IV. POST-DEPLOYMENT SETUP (REQUIRED)
 -----------------------------------------------------
 
-Once all containers are UP, you must install Laravel's dependencies.
+1. Enter the PHP container:
+   docker exec -it app-php sh
 
-1. ACCESS PHP CONTAINER: Log into the running PHP container using the service name 'php':
-   docker exec -it app-php /bin/sh
-
-2. INSTALL DEPENDENCIES: Inside the container, run Composer and generate the application key:
+2. Install Laravel dependencies:
    composer install
    php artisan key:generate
-   
-3. EXIT:
+
+3. (Optional but recommended)
+   php artisan storage:link
+   php artisan migrate
+
+4. Exit:
    exit
 
 -----------------------------------------------------
-V. ACCESS & USAGE
+V. ACCESSING YOUR APPLICATION
 -----------------------------------------------------
 
-Your application is ready:
+Laravel Application:
+  http://localhost:8081
 
-- Laravel App (Nginx): http://localhost
-- phpMyAdmin: http://localhost:8080
+phpMyAdmin:
+  http://localhost:8080
+
 =====================================================
+Deployment complete.
