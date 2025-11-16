@@ -1,42 +1,61 @@
-version: "3.8"
+version: '3.8'
 
 services:
+  # 1. LAYANAN APLIKASI (PHP-FPM)
+  php:
+    # Membangun dari Dockerfile kustom untuk menginstal Composer & extensions
+    build: 
+      context: . 
+      dockerfile: docker/php/Dockerfile
+    container_name: app-php
+    # Memetakan kode aplikasi dari folder lokal './src'
+    volumes:
+      - ./src:/var/www/html 
+    restart: unless-stopped
+    
+  # 2. LAYANAN DATABASE (MariaDB Stable LTS 11.4)
   db:
-    image: mysql:8.0
-    container_name: phpstack_db
-    restart: unless-stopped
+    image: mariadb:11.4 # Versi MariaDB stabil terbaru
+    container_name: app-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: appdb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: user123
+      # UBAH NILAI INI dengan password yang kuat!
+      MYSQL_ROOT_PASSWORD: my_strong_root_password 
+      MYSQL_DATABASE: my_laravel_db
+      MYSQL_USER: my_laravel_user
+      MYSQL_PASSWORD: my_strong_db_password
     volumes:
-      - ./mysql/data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-
-  web:
-    image: php:8.2-apache
-    container_name: phpstack_web
+      - dbdata:/var/lib/mysql # Volume persisten untuk data
     restart: unless-stopped
-    depends_on:
-      - db
-    volumes:
-      - ./app:/var/www/html
+    
+  # 3. LAYANAN WEB SERVER DAN REVERSE PROXY
+  nginx:
+    image: nginx:stable-alpine # Tag stabil resmi Nginx
+    container_name: app-nginx
     ports:
-      - "8080:80"
-    command: bash -c "docker-php-ext-install mysqli pdo pdo_mysql && apache2-foreground"
+      - "80:80" # Akses web utama
+    volumes:
+      # Mount ke folder public Laravel
+      - ./src:/var/www/html/public 
+      # Mount konfigurasi reverse proxy Nginx
+      - ./nginx/conf.d:/etc/nginx/conf.d 
+    depends_on:
+      - php # Nginx harus menunggu PHP-FPM aktif
+      - db
+    restart: unless-stopped
 
+  # 4. LAYANAN MANAJEMEN DATABASE
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpstack_phpmyadmin
-    restart: unless-stopped
+    image: phpmyadmin/phpmyadmin:latest 
+    container_name: app-pma
+    ports:
+      - "8080:80" # Akses phpMyAdmin
+    environment:
+      PMA_HOST: db # Hostname di jaringan Docker adalah 'db'
+      MYSQL_ROOT_PASSWORD: my_strong_root_password
     depends_on:
       - db
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: root
-      UPLOAD_LIMIT: 100M
-    ports:
-      - "8081:80"
+    restart: unless-stopped
+
+volumes:
+  # Definisi volume persisten
+  dbdata:
