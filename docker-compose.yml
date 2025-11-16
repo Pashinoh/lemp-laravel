@@ -1,34 +1,35 @@
 version: '3.8'
 
 services:
+
   php:
-    build: 
-      context: . 
+    build:
+      context: .
       dockerfile: docker/php/Dockerfile
     container_name: app-php
     volumes:
-      - ./src:/var/www/html 
+      - ./src:/var/www/html
     restart: unless-stopped
-    
+
   db:
     image: mariadb:11.4
     container_name: app-db
     environment:
-      MYSQL_ROOT_PASSWORD: my_strong_root_password 
+      MYSQL_ROOT_PASSWORD: my_strong_root_password
       MYSQL_DATABASE: my_laravel_db
       MYSQL_USER: my_laravel_user
       MYSQL_PASSWORD: my_strong_db_password
     volumes:
       - dbdata:/var/lib/mysql
     restart: unless-stopped
-    
+
   nginx:
     image: nginx:stable-alpine
     container_name: app-nginx
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
-      - ./src:/var/www/html/public
+      - ./src:/var/www/html
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - php
@@ -36,7 +37,7 @@ services:
     restart: unless-stopped
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest 
+    image: phpmyadmin/phpmyadmin:latest
     container_name: app-pma
     ports:
       - "8080:80"
