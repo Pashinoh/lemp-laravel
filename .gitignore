@@ -1,0 +1,4 @@
+/dbdata
+/storage/*.key
+.env
+/vendor

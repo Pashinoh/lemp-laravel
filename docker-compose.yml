@@ -1,61 +1,51 @@
 version: '3.8'
 
 services:
-  # 1. LAYANAN APLIKASI (PHP-FPM)
   php:
-    # Membangun dari Dockerfile kustom untuk menginstal Composer & extensions
     build: 
       context: . 
       dockerfile: docker/php/Dockerfile
     container_name: app-php
-    # Memetakan kode aplikasi dari folder lokal './src'
     volumes:
       - ./src:/var/www/html 
     restart: unless-stopped
     
-  # 2. LAYANAN DATABASE (MariaDB Stable LTS 11.4)
   db:
-    image: mariadb:11.4 # Versi MariaDB stabil terbaru
+    image: mariadb:11.4
     container_name: app-db
     environment:
-      # UBAH NILAI INI dengan password yang kuat!
       MYSQL_ROOT_PASSWORD: my_strong_root_password 
       MYSQL_DATABASE: my_laravel_db
       MYSQL_USER: my_laravel_user
       MYSQL_PASSWORD: my_strong_db_password
     volumes:
-      - dbdata:/var/lib/mysql # Volume persisten untuk data
+      - dbdata:/var/lib/mysql
     restart: unless-stopped
     
-  # 3. LAYANAN WEB SERVER DAN REVERSE PROXY
   nginx:
-    image: nginx:stable-alpine # Tag stabil resmi Nginx
+    image: nginx:stable-alpine
     container_name: app-nginx
     ports:
-      - "80:80" # Akses web utama
+      - "80:80"
     volumes:
-      # Mount ke folder public Laravel
-      - ./src:/var/www/html/public 
-      # Mount konfigurasi reverse proxy Nginx
-      - ./nginx/conf.d:/etc/nginx/conf.d 
+      - ./src:/var/www/html/public
+      - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
-      - php # Nginx harus menunggu PHP-FPM aktif
+      - php
       - db
     restart: unless-stopped
 
-  # 4. LAYANAN MANAJEMEN DATABASE
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest 
     container_name: app-pma
     ports:
-      - "8080:80" # Akses phpMyAdmin
+      - "8080:80"
     environment:
-      PMA_HOST: db # Hostname di jaringan Docker adalah 'db'
+      PMA_HOST: db
       MYSQL_ROOT_PASSWORD: my_strong_root_password
     depends_on:
       - db
     restart: unless-stopped
 
 volumes:
-  # Definisi volume persisten
   dbdata:

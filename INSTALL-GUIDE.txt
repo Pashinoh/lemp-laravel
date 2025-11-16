@@ -1,76 +1,68 @@
-===========================================================
-          🐳 INSTALLATION GUIDE: PHP + MySQL + phpMyAdmin
-                   USING DOCKER COMPOSE
-===========================================================
+=====================================================
+LARAVEL STACK INSTALLATION GUIDE (DOCKER COMPOSE)
+=====================================================
 
-📘 DESCRIPTION
-This guide explains how to set up a complete PHP + Apache + MySQL + phpMyAdmin stack using Docker Compose.
-Suitable for beginners, developers, and server administrators.
+This guide assumes you have placed all three required configuration files (docker-compose.yml, Dockerfile, default.conf) in the correct directories (src/, docker/php/, nginx/conf.d/).
 
------------------------------------------------------------
-⚙️ INSTALLATION STEPS
------------------------------------------------------------
+-----------------------------------------------------
+I. UNIVERSAL PREREQUISITES AND STRUCTURE
+-----------------------------------------------------
 
-1. PREPARE DOCKER & DOCKER COMPOSE
-   - Make sure Docker and Docker Compose are installed on your system.
-   - Verify installation by running:
+PREREQUISITES:
+- Docker Engine and Docker Compose (or Docker Desktop on Windows).
+- Git (Optional, but recommended for cloning the repository).
 
-         docker --version
-         docker compose version
+FILE STRUCTURE:
+- Ensure the project directory includes the following folders:
+  /src
+  /docker/php
+  /nginx/conf.d
 
-2. SET UP THE PROJECT FILES
-   - Create a new project folder, for example:
+-----------------------------------------------------
+II. DEPLOYMENT GUIDE FOR LINUX / CASAOS
+-----------------------------------------------------
 
-         mkdir php-docker-stack && cd php-docker-stack
+1. NAVIGATION: Use SSH/Terminal to navigate to your project directory on the server (e.g., /DATA/AppData/your-project/).
 
-   - Place the following files inside the folder:
-         • docker-compose.yml
-         • A folder named app/ with an index.php file inside
+2. DEPLOYMENT COMMAND: Execute the command to build the custom PHP image and start all services:
+   docker compose up -d --build
 
-3. RUN THE CONTAINERS
-   - Start the stack with:
+3. VERIFICATION: Ensure all containers are running:
+   docker ps
 
-         docker compose up -d
+-----------------------------------------------------
+III. DEPLOYMENT GUIDE FOR WINDOWS
+-----------------------------------------------------
 
-   - Wait until all containers are created and running.
-   - You should now have three containers:
-         • web          → PHP + Apache service
-         • db           → MySQL database service
-         • phpmyadmin   → phpMyAdmin web interface
+1. PREREQUISITES: Ensure Docker Desktop is running.
 
-4. ACCESS VIA BROWSER
-   Once all containers are running, open your web browser and visit:
+2. NAVIGATION: Open PowerShell or Command Prompt and navigate to your local project directory (e.g., C:\Users\user\project\).
 
-         PHP Website   : http://localhost:8080
-         phpMyAdmin    : http://localhost:8081
+3. DEPLOYMENT COMMAND: Execute the same universal command:
+   docker compose up -d --build
 
-   (If running on a remote server, replace `localhost` with the server’s IP address.)
+-----------------------------------------------------
+IV. POST-DEPLOYMENT SETUP (REQUIRED FOR ALL HOSTS)
+-----------------------------------------------------
 
-5. LOGIN TO PHPMYADMIN
-   Use the following credentials:
+Once all containers are UP, you must install Laravel's dependencies.
 
-         Server   : db
-         Username : root
-         Password : root
+1. ACCESS PHP CONTAINER: Log into the running PHP container using the service name 'php':
+   docker exec -it app-php /bin/sh
 
-6. DONE ✅
-   Your PHP website and phpMyAdmin interface are now up and running.
+2. INSTALL DEPENDENCIES: Inside the container, run Composer and generate the application key:
+   composer install
+   php artisan key:generate
+   
+3. EXIT:
+   exit
 
-   MySQL data is stored persistently in:
-         ./mysql/data/
+-----------------------------------------------------
+V. ACCESS & USAGE
+-----------------------------------------------------
 
------------------------------------------------------------
-🧩 ADDITIONAL NOTES
------------------------------------------------------------
+Your application is ready:
 
-- If ports 8080 or 8081 are already in use, change them in the `docker-compose.yml` file before starting.
-- The PHP application folder is located at:
-      ./app/
-- The MySQL database data folder is located at:
-      ./mysql/data/
-- All data is persistent — safe even if the containers are stopped or removed.
-- Docker images are compatible with both x86_64 and ARM architectures (including Raspberry Pi).
-- To stop the stack, use:
-
-      docker compose down
-
+- Laravel App (Nginx): http://localhost
+- phpMyAdmin: http://localhost:8080
+=====================================================
