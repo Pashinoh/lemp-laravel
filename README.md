@@ -62,3 +62,7 @@ To stop the containers, simply run:
 
 ```bash
 docker-compose down
+```
+
+## License
+MIT License — see LICENSE.
