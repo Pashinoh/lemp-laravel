@@ -1,4 +1,8 @@
-/dbdata
-/storage/*.key
-.env
-/vendor
+# Ignore vendor and other system files
+/vendor/
+/node_modules/
+/.env
+/storage/*
+/public/storage
+/.idea
+.DS_Store
