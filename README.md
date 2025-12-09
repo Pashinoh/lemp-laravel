@@ -65,4 +65,4 @@ docker-compose down
 ```
 
 ## License
-MIT License — see LICENSE.
+MIT License — see `LICENSE`.
