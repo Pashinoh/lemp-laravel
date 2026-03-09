@@ -1,18 +1,33 @@
-# LEMP Laravel (Simple)
+# LEMP Laravel
 
-Lightweight Laravel stack with Nginx, PHP-FPM, MariaDB, and optional phpMyAdmin.
+Simple Docker template for Laravel with:
+
+- Nginx
+- PHP-FPM
+- MariaDB
+- Optional phpMyAdmin
 
 ## Requirements
 
-- Docker Desktop
+- Docker Desktop is installed and running
+- Git
 - PowerShell (Windows) or Bash (Linux/macOS)
 
-## Install (Recommended)
+## Quick Start
 
-Windows:
+### 1. Clone project
+
+```bash
+git clone https://github.com/Pashinoh/lemp-laravel.git
+cd lemp-laravel
+```
+
+### 2. Install and run
+
+Windows (safe for execution policy):
 
 ```powershell
-.\setup.ps1 -Mode install
+powershell -ExecutionPolicy Bypass -File .\setup.ps1 -Mode install
 ```
 
 Linux/macOS:
@@ -22,15 +37,20 @@ chmod +x ./setup.sh
 ./setup.sh install
 ```
 
-What it does:
+The installer will:
 
-1. Creates Laravel project if missing.
-2. Starts containers.
-3. Applies runtime config for Windows bind mounts.
-4. Runs demo checks automatically.
-5. Asks if phpMyAdmin should be included now.
+1. Create `src/` Laravel project (if missing)
+2. Build and start containers
+3. Apply runtime config
+4. Run demo checks
+5. Ask whether to enable phpMyAdmin
 
-## Daily Use
+### 3. Open app
+
+- App: `http://localhost`
+- phpMyAdmin: `http://localhost:8080` (if enabled)
+
+## Daily Commands
 
 Windows menu:
 
@@ -44,12 +64,7 @@ Linux/macOS menu:
 ./setup.sh
 ```
 
-Main URLs:
-
-- App: `http://localhost`
-- phpMyAdmin: `http://localhost:8080` (if enabled)
-
-## Stop
+Stop all services:
 
 ```powershell
 .\setup.ps1 -Mode down
@@ -58,6 +73,23 @@ Main URLs:
 ```bash
 ./setup.sh down
 ```
+
+## If You Get Errors
+
+`docker: command not found` or Docker not detected:
+
+- Install/start Docker Desktop, then retry
+
+`running scripts is disabled` (Windows):
+
+- Use:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\setup.ps1 -Mode install
+```
+
+Port already in use (`80`, `8080`, or `3306`):
+
+- Stop conflicting service or container, then run install again
 
 ## Debug
 
