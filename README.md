@@ -1,68 +1,68 @@
-# LEMP Laravel Docker Setup
+# LEMP Laravel (Simple)
 
-This repository contains a Docker setup for running a Laravel project with Nginx, PHP-FPM, MySQL (MariaDB), and phpMyAdmin. It provides a simple and cross-platform solution that works on both **Linux** and **Windows** systems.
+Lightweight Laravel stack with Nginx, PHP-FPM, MariaDB, and optional phpMyAdmin.
 
-## Prerequisites
+## Requirements
 
-Before getting started, make sure you have the following installed:
+- Docker Desktop
+- PowerShell (Windows) or Bash (Linux/macOS)
 
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- [Git](https://git-scm.com/)
+## Install (Recommended)
 
-## Installation
+Windows:
 
-1. **Clone the repository:**
-
-    First, clone this repository to your local machine.
-
-    ```bash
-    git clone https://github.com/Pashinoh/lemp-laravel.git
-    cd lemp-laravel
-    ```
-
-2. **Set up Docker Compose:**
-
-    The repository already contains a `docker-compose.yml` file that defines the services for Nginx, PHP-FPM, MariaDB, and phpMyAdmin. No additional configuration is required.
-
-3. **Start the Docker containers:**
-
-    Run the following command to start all services (PHP, Nginx, MariaDB, phpMyAdmin) in the background:
-
-    ```bash
-    docker-compose up -d
-    ```
-
-4. **Install Laravel dependencies:**
-
-    After the containers are up and running, you need to install Laravel dependencies using Composer. Run the following command:
-
-    ```bash
-    docker-compose run --rm app-php composer install
-    ```
-
-    This will install the required dependencies for the Laravel application inside the `app-php` container.
-
-5. **Access the Laravel application:**
-
-    Once the installation is complete, you can access your Laravel application:
-
-    - Open your browser and go to `http://localhost` for **Linux** or `http://localhost` or `http://127.0.0.1` for **Windows**.
-
-6. **Access phpMyAdmin:**
-
-    You can access phpMyAdmin by navigating to `http://localhost:8080` in your browser. The default login credentials are:
-
-    - **Username:** root
-    - **Password:** root
-
-## Stopping the Containers
-
-To stop the containers, simply run:
-
-```bash
-docker-compose down
+```powershell
+.\setup.ps1 -Mode install
 ```
 
+Linux/macOS:
+
+```bash
+chmod +x ./setup.sh
+./setup.sh install
+```
+
+What it does:
+
+1. Creates Laravel project if missing.
+2. Starts containers.
+3. Applies runtime config for Windows bind mounts.
+4. Runs demo checks automatically.
+5. Asks if phpMyAdmin should be included now.
+
+## Daily Use
+
+Windows menu:
+
+```powershell
+.\setup.ps1
+```
+
+Linux/macOS menu:
+
+```bash
+./setup.sh
+```
+
+Main URLs:
+
+- App: `http://localhost`
+- phpMyAdmin: `http://localhost:8080` (if enabled)
+
+## Stop
+
+```powershell
+.\setup.ps1 -Mode down
+```
+
+```bash
+./setup.sh down
+```
+
+## Debug
+
+See wiki: `wiki/Debug-Guide.md`
+
 ## License
-MIT License — see `LICENSE`.
+
+MIT, see `LICENSE`.

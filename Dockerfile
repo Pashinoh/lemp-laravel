@@ -1,25 +1,23 @@
-# PHP-FPM with Laravel Dependencies
-FROM php:8.0-fpm
+FROM composer:2 AS composer
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    git \
-    zip \
-    unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd \
-    && docker-php-ext-install pdo pdo_mysql
+# Alpine-based PHP-FPM to keep image size small.
+FROM php:8.3-fpm-alpine
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+LABEL org.opencontainers.image.title="lemp-laravel app image" \
+    org.opencontainers.image.description="Lightweight PHP-FPM image for Laravel in LEMP stack" \
+    org.opencontainers.image.authors="Pashinoh" \
+    maintainer="Pashinoh"
 
-# Set working directory
+RUN apk add --no-cache \
+    icu-dev \
+    libzip-dev \
+    oniguruma-dev \
+    $PHPIZE_DEPS \
+    && docker-php-ext-install -j$(nproc) pdo_mysql bcmath opcache zip \
+    && apk del $PHPIZE_DEPS
+
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+
 WORKDIR /var/www/html
-
-# Install Laravel (optional)
-# RUN composer create-project --prefer-dist laravel/laravel .
 
 CMD ["php-fpm"]
