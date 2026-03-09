@@ -61,8 +61,8 @@ Main URLs:
 
 ## Debug
 
-See GitHub Wiki: `https://github.com/Pashinoh/lemp-laravel/wiki`
+See [GitHub Wiki](https://github.com/Pashinoh/lemp-laravel/wiki).
 
 ## License
 
-MIT, see `LICENSE`.
+MIT, see [LICENSE](LICENSE).
