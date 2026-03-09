@@ -61,7 +61,7 @@ Main URLs:
 
 ## Debug
 
-See wiki: `wiki/Debug-Guide.md`
+See GitHub Wiki: `https://github.com/Pashinoh/lemp-laravel/wiki`
 
 ## License
 
