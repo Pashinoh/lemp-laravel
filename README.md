@@ -95,12 +95,6 @@ Port already in use (`80`, `8080`, or `3306`):
 
 See [GitHub Wiki](https://github.com/Pashinoh/lemp-laravel/wiki).
 
-## GitHub Package
-
-After each push to `main`, GitHub Actions publishes the Docker image to GHCR:
-
-- `ghcr.io/pashinoh/lemp-laravel-app:latest`
-
 ## License
 
 MIT, see [LICENSE](LICENSE).
