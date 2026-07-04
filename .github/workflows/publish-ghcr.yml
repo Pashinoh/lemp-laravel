@@ -2,9 +2,7 @@ name: Publish GHCR Image
 
 on:
   push:
-    branches: [main]
     tags: ["v*"]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,7 +24,6 @@ jobs:
         with:
           images: ghcr.io/pashinoh/lemp-laravel-app
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
             type=semver,pattern={{version}}
       - uses: docker/build-push-action@v6
         with:
