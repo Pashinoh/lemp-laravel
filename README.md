@@ -18,7 +18,7 @@ Simple Docker template for Laravel with:
 Published image:
 
 ```bash
-docker pull ghcr.io/pashinoh/lemp-laravel-app:1.1.0
+docker pull ghcr.io/pashinoh/lemp-laravel-app:latest
 ```
 
 ### 1. Clone project
